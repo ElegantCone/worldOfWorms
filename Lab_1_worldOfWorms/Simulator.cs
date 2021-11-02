@@ -1,7 +1,6 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Lab_1_worldOfWorms
@@ -9,23 +8,24 @@ namespace Lab_1_worldOfWorms
     public class Simulator
     {
         public Field _field;
-
-        private StringBuilder wormsInfo;
+        private StreamWriter output;
 
         public Simulator()
         {
             _field = new Field();
-            wormsInfo = new StringBuilder();
         }
 
         public void StartGame()
         {
-            while (_field.worms.Any())
+            using (output = new StreamWriter("output.txt", false))
             {
-                _field.Update();
+                while (_field.worms.Any())
+                {
+                    _field.Update();
+                    output.Write(_field.GetInfo());
+                }    
             }
         }
-
         
     }
     

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Lab_1_worldOfWorms
 {
     public class Field : IUpdatable
     {
+        
         private ObservableCollection<Worm> _worms = new();
         private Dictionary<Position,Food> _foods = new();
 
@@ -15,23 +17,27 @@ namespace Lab_1_worldOfWorms
 
         public Action<Field> onFieldChanged = field => {};
 
+        private StringBuilder wormsInfo;
+
         public Field()
         {
             _worms.CollectionChanged += (sender, args) =>
             {
                 onFieldChanged?.Invoke(this);
             };
+            wormsInfo = new StringBuilder();
         }
 
         public void Update()
         {
-            Console.Write("Worms: [");
+            wormsInfo.Clear();
+            wormsInfo.Append("Worms: [");
             foreach (var worm in _worms)
             {
                 worm.Update();
-                Console.Write(worm.GetInfo());
+                wormsInfo.Append(worm.GetInfo());
             }
-            Console.Write("]\n");
+            wormsInfo.Append("]\n");
             foreach (var worm in _wormsToRemove)
             {
                 _worms.Remove(worm);
@@ -46,6 +52,11 @@ namespace Lab_1_worldOfWorms
             {
                 _wormsToRemove.Add(worm);
             }
+        }
+
+        public string GetInfo()
+        {
+            return wormsInfo.ToString();
         }
     }
 }
