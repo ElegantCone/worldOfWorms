@@ -41,11 +41,20 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="ai\AIType.cs" />
-        <Compile Include="IUpdatable.cs" />
+        <Compile Include="ai\WormAISimple.cs" />
+        <Compile Include="Engine\Component.cs" />
+        <Compile Include="Engine\GameObject.cs" />
+        <Compile Include="Engine\IUpdatable.cs" />
+        <Compile Include="Engine\Position.cs" />
+        <Compile Include="Engine\Transform.cs" />
+        <Compile Include="Engine\Vector2d.cs" />
+        <Compile Include="Logger.cs" />
         <Compile Include="model\Decision.cs" />
         <Compile Include="model\Direction.cs" />
         <Compile Include="model\Food.cs" />
-        <Compile Include="model\Position.cs" />
+        <Compile Include="model\FoodGenerator.cs" />
+        <Compile Include="model\HealthController.cs" />
+        <Compile Include="model\RandomExtention.cs" />
         <Compile Include="model\Worm.cs" />
         <Compile Include="model\WormAction.cs" />
         <Compile Include="Simulator.cs" />

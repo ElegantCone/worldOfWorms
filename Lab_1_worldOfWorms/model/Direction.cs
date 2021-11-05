@@ -5,6 +5,7 @@
         UP = 0, 
         DOWN,
         RIGHT,
-        LEFT
+        LEFT,
+        NOTHING
     }
 }

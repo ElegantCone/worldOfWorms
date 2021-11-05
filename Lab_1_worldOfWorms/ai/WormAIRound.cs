@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lab_1_worldOfWorms.Engine;
 
 namespace Lab_1_worldOfWorms.ai
 {
@@ -14,22 +15,22 @@ namespace Lab_1_worldOfWorms.ai
                 { Direction.RIGHT, (position, center, radius) => position.x >= center.x + radius }
             };
 
-        private Position center;
-        private int radius;
+        private Position _center;
+        private int _radius;
 
         private WormAction previousAction = new WormAction(Decision.MOVE, Direction.UP);
         
         public WormAIRound(int x, int y, int r)
         {
-            center = new Position(x, y);
-            radius = r;
+            _center = new Position(x, y);
+            _radius = r;
         }
         
-        public WormAction GetNextAction(Position position)
+        public WormAction GetNextAction(Position position, Transform food = null)
         {
             var dir = previousAction._direction;
 
-            if (ChangeDirectionConditions[dir](position, center, radius))
+            if (ChangeDirectionConditions[dir](position, _center, _radius))
             {
                 return previousAction = new WormAction(Decision.MOVE, GetNextDirection(dir));
             }
@@ -49,5 +50,6 @@ namespace Lab_1_worldOfWorms.ai
 
             return Direction.UP;
         }
+        
     }
 }

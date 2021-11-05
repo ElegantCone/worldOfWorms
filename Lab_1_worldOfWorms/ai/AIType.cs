@@ -3,7 +3,7 @@
     public enum AIType
     {
         CIRCLE,
-        RANDOM,
+        SIMPLE,
         SMART
     }
 }

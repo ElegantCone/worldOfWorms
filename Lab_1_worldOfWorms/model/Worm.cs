@@ -1,128 +1,143 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Text;
 using Lab_1_worldOfWorms.ai;
+using Lab_1_worldOfWorms.Engine;
+using Lab_1_worldOfWorms.model;
 
 namespace Lab_1_worldOfWorms
 {
-    public class Worm : IUpdatable
+    public class Worm : Component
     {
-        private Position _position;
-
-        private string name;
+        private string _name;
 
         private Field _field;
 
-        private int _life;
-        private int life
-        {
-            get => _life;
-            set
-            {
-                _life = value;
-                if (life <= 0)
-                {
-                    _field.RemoveWorm(this);
-                }
-            }
-        }
-
+        private const int Life = 100;
+        private int _childCount = 0;
+        private const int ChildHealth = 10;
         private int radius;
+        
 
         private IWormAI ai;
 
-        private Dictionary<Direction, Action> ChangePosition;
-
-        public Worm(string name, int x, int y, Field field, AIType type)
+        private Dictionary<Direction, Action<Position>> ChangePosition;
+        
+        public void Initialize(string name, int x, int y, Field field, AIType type)
         {
-            this.name = name;
-            _position = new Position(x, y);
+            _name = name;
+            gameObject.GetComponent<Transform>().position = new Position(x, y);
             _field = field;
             _field.worms.Add(this);
-            life = 100;
+            HealthController hc;
+            gameObject.AddComponent(hc = new HealthController(Life));
+            hc.OnDeath += () => _field.RemoveWorm(this);
 
             switch (type)
             {
                 case AIType.CIRCLE:
                     ai = new WormAIRound(x, y, 3);
                     break;
-                //todo: остальные виды ИИ
+                case AIType.SIMPLE:
+                    ai = new WormAISimple(this);
+                    break;
+                //todo: умный ИИ
             }
 
             ChangePosition = new()
             {
-                {Direction.UP, () => _position.y++},
-                {Direction.DOWN, () => _position.y--},
-                {Direction.LEFT, () => _position.x--},
-                {Direction.RIGHT, () => _position.x++}
+                {Direction.UP, (position) => position.y++},
+                {Direction.DOWN, (position) => position.y--},
+                {Direction.LEFT, (position) => position.x--},
+                {Direction.RIGHT, (position) => position.x++},
+                {Direction.NOTHING, (position) => {}}
             };
 
 
         }
 
-        public void MakeAction()
+        private void MakeAction()
         {
-            WormAction wAction = ai.GetNextAction(_position);
-            //Console.WriteLine($"Life: {life}, Action: {wAction}");
+            var _position = gameObject.GetComponent<Transform>().position;
+            var foods = new List<GameObject>(_field.foods.OrderBy(f => 
+                Position.Distance(f.GetComponent<Transform>().position, _position)));
+            WormAction wAction;
+            if (foods.Count > 0)
+            {
+                wAction = ai.GetNextAction(_position, foods[0].GetComponent<Transform>());
+            }
+            else
+            {
+                wAction = ai.GetNextAction(_position);
+            }
+            if (wAction._decision == Decision.DO_NOTHING)
+            {
+                return;   
+            }
+            Position pos = new Position(_position.x, _position.y);
+            ChangePosition[wAction._direction](pos);
             if (wAction._decision == Decision.MOVE)
             {
-                Position pos = _position;
-                ChangePosition[wAction._direction]();
-                if (!CheckCells(_position))
+                if (_field.IsCellEmpty(pos))
                 {
-                    _position = pos;
+                    gameObject.GetComponent<Transform>().position = pos;
                 }
             }
-            life--;
-        }
-        
-        /*//todo: перенести метод в более подходящее место
-        private Position GetNextMove()
-        {
-            Direction dir = (Direction) rnd.Next(0, 3);
-            int x = _position.x;
-            int y = _position.y;
-            switch (dir)
+            if (wAction._decision == Decision.REPRODUCE)
             {
-                case (Direction.UP):
-                    y++;
-                    break;
-                case (Direction.DOWN):
-                    y--;
-                    break;
-                case (Direction.LEFT):
-                    x--;
-                    break;
-                case (Direction.RIGHT):
-                    x++;
-                    break;
+                if (_field.IsCellEmpty(pos))
+                {
+                    Reproduce(pos);
+                    gameObject.GetComponent<HealthController>().health -= 10;
+                }
             }
 
-            return CheckCells(x, y)? new Position(x, y) :  _position;
-        }*/
-        private bool CheckCells(Position position)
-        {
-            
-            foreach (var worm in _field.worms) 
+            GameObject foodToEat = null;
+            foreach (var food in _field.foods)
             {
-                if (worm._position == position)
+                if (food.GetComponent<Transform>().position == _position)
                 {
-                    return false;
+                    foodToEat = food;
+                    break;
                 }
             }
-            return true;
+
+            if (foodToEat != null)
+            {
+                foodToEat.GetComponent<HealthController>().health = 0;
+                gameObject.GetComponent<HealthController>().health += 10;
+            }
         }
+
+        private void Reproduce(Position pos)
+        {
+            var wormGo = new GameObject();
+            var worm = new Worm();
+            wormGo.AddComponent(worm);
+            worm.Initialize(GenerateName(), pos.x, pos.y, Simulator.instance._field, AIType.SIMPLE);
+            worm.gameObject.GetComponent<HealthController>().health = ChildHealth;
+            
+        }
+        
+
+        private string GenerateName()
+        {
+            return $"{_name}#{_childCount++}";
+        }
+
 
         public string GetInfo()
         {
-            StringBuilder sb = new StringBuilder($"{name}, ({_position.x},{_position.y})");
+            var _position = gameObject.GetComponent<Transform>().position;
+            StringBuilder sb = new StringBuilder($"{_name}-{gameObject.GetComponent<HealthController>().health}, {_position}");
             return sb.ToString();
         }
 
-        public void Update()
+        public override void Update()
         {
             MakeAction();
         }
+        
     }
 }
