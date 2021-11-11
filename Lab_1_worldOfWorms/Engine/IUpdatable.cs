@@ -1,4 +1,4 @@
-﻿namespace Lab_1_worldOfWorms
+﻿namespace Lab_1_worldOfWorms.Engine
 {
     public interface IUpdatable
     {
