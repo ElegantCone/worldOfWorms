@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Lab_1_worldOfWorms.Engine;
+using Lab_1_worldOfWorms.Model;
 
 namespace Lab_1_worldOfWorms
 {

@@ -1,4 +1,6 @@
-﻿using Lab_1_worldOfWorms.Engine;
+﻿using Lab_1_worldOfWorms.AI;
+using Lab_1_worldOfWorms.Engine;
+using Lab_1_worldOfWorms.Model;
 
 namespace Lab_1_worldOfWorms
 {

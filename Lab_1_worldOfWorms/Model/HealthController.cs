@@ -1,7 +1,7 @@
 ﻿using System;
 using Lab_1_worldOfWorms.Engine;
 
-namespace Lab_1_worldOfWorms.model
+namespace Lab_1_worldOfWorms.Model
 {
     public class HealthController : Component
     {

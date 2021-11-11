@@ -40,8 +40,8 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="ai\AIType.cs" />
-        <Compile Include="ai\WormAISimple.cs" />
+        <Compile Include="AI\AIType.cs" />
+        <Compile Include="AI\WormAISimple.cs" />
         <Compile Include="Engine\Component.cs" />
         <Compile Include="Engine\GameObject.cs" />
         <Compile Include="Engine\IUpdatable.cs" />
@@ -49,17 +49,17 @@
         <Compile Include="Engine\Transform.cs" />
         <Compile Include="Engine\Vector2d.cs" />
         <Compile Include="Logger.cs" />
-        <Compile Include="model\Decision.cs" />
-        <Compile Include="model\Direction.cs" />
-        <Compile Include="model\Food.cs" />
-        <Compile Include="model\FoodGenerator.cs" />
-        <Compile Include="model\HealthController.cs" />
-        <Compile Include="model\RandomExtention.cs" />
-        <Compile Include="model\Worm.cs" />
-        <Compile Include="model\WormAction.cs" />
+        <Compile Include="Model\Decision.cs" />
+        <Compile Include="Model\Direction.cs" />
+        <Compile Include="Model\Food.cs" />
+        <Compile Include="Model\FoodGenerator.cs" />
+        <Compile Include="Model\HealthController.cs" />
+        <Compile Include="Model\RandomExtention.cs" />
+        <Compile Include="Model\Worm.cs" />
+        <Compile Include="Model\WormAction.cs" />
         <Compile Include="Simulator.cs" />
-        <Compile Include="ai\IWormAI.cs" />
-        <Compile Include="ai\WormAIRound.cs" />
+        <Compile Include="AI\IWormAI.cs" />
+        <Compile Include="AI\WormAIRound.cs" />
         <Compile Include="Field.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

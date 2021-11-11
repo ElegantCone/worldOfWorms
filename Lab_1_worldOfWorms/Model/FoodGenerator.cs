@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using Lab_1_worldOfWorms.Engine;
-using Lab_1_worldOfWorms.model;
+using Lab_1_worldOfWorms.Model;
 
-namespace Lab_1_worldOfWorms
+namespace Lab_1_worldOfWorms.Model
 {
     public class FoodGenerator : Component
     {

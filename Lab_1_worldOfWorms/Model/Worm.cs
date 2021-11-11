@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Lab_1_worldOfWorms.ai;
+using Lab_1_worldOfWorms.AI;
 using Lab_1_worldOfWorms.Engine;
-using Lab_1_worldOfWorms.model;
 
-namespace Lab_1_worldOfWorms
+namespace Lab_1_worldOfWorms.Model
 {
     public class Worm : Component
     {
