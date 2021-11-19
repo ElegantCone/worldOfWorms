@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using Lab_1_worldOfWorms.Engine;
+using Lab_1_worldOfWorms.Model;
 
 namespace Lab_1_worldOfWorms
 {
-    public class Field : IUpdatable
+    public class Field : Component
     {
         
         private ObservableCollection<Worm> _worms = new();
-        private Dictionary<Position,Food> _foods = new();
+        private ObservableCollection<GameObject> _foods = new();
 
         private readonly IList<Worm> _wormsToRemove = new List<Worm>(); 
+        private readonly IList<GameObject> _foodsToRemove = new List<GameObject>(); 
 
         public ObservableCollection<Worm> worms => _worms;
+
+        public ObservableCollection<GameObject> foods => _foods;
 
         public Action<Field> onFieldChanged = field => {};
 
@@ -25,24 +30,28 @@ namespace Lab_1_worldOfWorms
             {
                 onFieldChanged?.Invoke(this);
             };
+            
+            _foods.CollectionChanged += (sender, args) =>
+            {
+                onFieldChanged?.Invoke(this);
+            };
+            
             wormsInfo = new StringBuilder();
         }
 
-        public void Update()
+        public override void Update()
         {
-            wormsInfo.Clear();
-            wormsInfo.Append("Worms: [");
-            foreach (var worm in _worms)
-            {
-                worm.Update();
-                wormsInfo.Append(worm.GetInfo());
-            }
-            wormsInfo.Append("]\n");
+            
             foreach (var worm in _wormsToRemove)
             {
                 _worms.Remove(worm);
             }
-            
+
+            foreach (var food in _foodsToRemove)
+            {
+                _foods.Remove(food);
+            }
+            _foodsToRemove.Clear();
             _wormsToRemove.Clear();
         }
 
@@ -53,10 +62,43 @@ namespace Lab_1_worldOfWorms
                 _wormsToRemove.Add(worm);
             }
         }
+        
 
         public string GetInfo()
         {
             return wormsInfo.ToString();
+        }
+
+        public void RemoveFood(GameObject food)
+        {
+            if (_foods.Contains(food))
+            {
+                _foodsToRemove.Add(food);
+            }
+        }
+        
+        public bool IsCellEmpty(Position pos, bool isFood = false)
+        {
+
+            if (!isFood)
+            {
+                foreach (var worm in worms)
+                {
+                    if (worm.gameObject.GetComponent<Transform>().position == pos)
+                        return false;
+                }
+            }
+
+            if (isFood)
+            {
+                foreach (var food in foods)
+                {
+                    if (food.GetComponent<Transform>().position == pos) 
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 }

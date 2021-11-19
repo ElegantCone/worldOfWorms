@@ -1,10 +1,11 @@
-﻿namespace Lab_1_worldOfWorms
+﻿namespace Lab_1_worldOfWorms.Model
 {
     public enum Direction
     {
         UP = 0, 
         DOWN,
         RIGHT,
-        LEFT
+        LEFT,
+        NOTHING
     }
 }

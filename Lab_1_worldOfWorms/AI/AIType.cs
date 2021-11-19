@@ -1,9 +1,9 @@
-﻿namespace Lab_1_worldOfWorms
+﻿namespace Lab_1_worldOfWorms.AI
 {
     public enum AIType
     {
         CIRCLE,
-        RANDOM,
+        SIMPLE,
         SMART
     }
 }

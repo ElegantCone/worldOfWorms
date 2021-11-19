@@ -1,14 +1,26 @@
-﻿namespace Lab_1_worldOfWorms
+﻿using Lab_1_worldOfWorms.AI;
+using Lab_1_worldOfWorms.Engine;
+using Lab_1_worldOfWorms.Model;
+
+namespace Lab_1_worldOfWorms
 {
     internal class Program
     {
         public static void Main(string[] args)
         {
             Simulator simulator = new Simulator();
-
-            var worm = new Worm("Worm1", 0, 0, simulator._field, AIType.CIRCLE);
+            
+            AddWorm("W", 0, 0, AIType.SIMPLE);
 
             simulator.StartGame();
+        }
+
+        private static void AddWorm(string name, int x, int y, AIType ai)
+        {
+            var wormGo = new GameObject();
+            var worm = new Worm();
+            wormGo.AddComponent(worm);
+            worm.Initialize(name, x, y, Simulator.instance._field, ai);
         }
     }
 }
