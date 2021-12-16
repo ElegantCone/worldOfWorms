@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using WormsWorld.Engine;
+using WormsWorld.Model;
 
 namespace WormsWorld.Services
 {

@@ -5,7 +5,7 @@ using System.Text;
 using WormsWorld.Engine;
 using WormsWorld.Model;
 
-namespace WormsWorld
+namespace WormsWorld.Model
 {
     public class Field : Component
     {

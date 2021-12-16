@@ -6,7 +6,7 @@ using WormsWorld.AI;
 using WormsWorld.Engine;
 using WormsWorld.Model;
 
-namespace WormsWorld
+namespace WormsWorld.Services
 {
     class SimulatorHostedService : IHostedService
     {

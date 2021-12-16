@@ -11,7 +11,7 @@ using WormsWorld.Engine;
 using WormsWorld.Model;
 using WormsWorld.Services;
 
-namespace WormsWorld
+namespace WormsWorld.Services
 {
     public class Simulator : IUpdatable
     {
