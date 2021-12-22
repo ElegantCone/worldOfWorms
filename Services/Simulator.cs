@@ -1,15 +1,8 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using WormsWorld.AI;
 using WormsWorld.Engine;
 using WormsWorld.Model;
-using WormsWorld.Services;
 
 namespace WormsWorld.Services
 {
@@ -21,33 +14,41 @@ namespace WormsWorld.Services
             private set;
         }
 
-        private List<GameObject>  _gameObjectsToAdd, _gameObjectsToRemove;
-        private HashSet<GameObject> _gameObjects;
-        private WormBehaviourService _wormBehaviourService;
+        private readonly List<GameObject>  _gameObjectsToAdd;
+        private readonly List<GameObject>  _gameObjectsToRemove;
+        private readonly HashSet<GameObject> _gameObjects;
+        public readonly WormBehaviourService WormBehaviourService;
+        public readonly FoodGenerator FoodGenerator;
+        public readonly Field Field;
 
-        public Field _field;
-
-        public Simulator(Field field, FoodGenerator foodGenerator, Logger logger, WormBehaviourService wormBehaviourService)
+        public Simulator(Field field, FoodGenerator foodGenerator, WormBehaviourService wormBehaviourService, Logger? logger)
         {
             instance = this;
             _gameObjects = new();
             _gameObjectsToAdd = new();
             _gameObjectsToRemove = new();
-            _wormBehaviourService = wormBehaviourService;
-            GameObject go = new GameObject();
+            WormBehaviourService = wormBehaviourService;
+            FoodGenerator = foodGenerator;
+            GameObject go = new();
             
-            go.AddComponent(_field = field);
-            go.AddComponent(foodGenerator);
-            go.AddComponent(logger);
+            go.AddComponent(Field = field);
+            if (logger != null)
+            {
+                go.AddComponent(logger);   
+            }
+            go.AddComponent(FoodGenerator);
+            go.AddComponent(wormBehaviourService);
         }
         
         
-        private void AddWorm(int x, int y, AIType ai)
+        
+        public void AddWorm(int x, int y, AIType ai)
         {
             var wormGo = new GameObject();
             var worm = new Worm();
             wormGo.AddComponent(worm);
-            worm.Initialize(x, y, ai, _wormBehaviourService);
+            worm.Initialize(x, y, ai, WormBehaviourService.NameGenerator.GenerateName());
+            Field.AddWorm(worm);
         }
 
         public void RemoveGameObject(GameObject gameObject)
@@ -62,10 +63,9 @@ namespace WormsWorld.Services
         
         public void StartGame()
         {
-            AddWorm(0, 0, AIType.SIMPLE);
-            AddWorm(1, 1, AIType.SIMPLE);
-            
-            while (_field.worms.Any())
+            AddWorm(0, 0, AIType.Simple);
+            Field.Update();
+            while (Field.Worms.Any())
             {
                 Update();
             }  

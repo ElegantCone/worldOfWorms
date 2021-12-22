@@ -6,7 +6,7 @@ namespace WormsWorld.Engine
 {
     public class GameObject : IUpdatable
     {
-        private Dictionary<Type, Component> _components = new();
+        private readonly Dictionary<Type, Component> _components = new();
 
         public GameObject()
         {
@@ -19,7 +19,7 @@ namespace WormsWorld.Engine
         {
             if (_components.ContainsKey(typeof(T))) return false;
             _components.Add(component.GetType(), component);
-            component.gameObject = this;
+            component.GameObject = this;
             return true;
         }
 

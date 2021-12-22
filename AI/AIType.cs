@@ -2,8 +2,8 @@
 {
     public enum AIType
     {
-        CIRCLE,
-        SIMPLE,
-        SMART
+        Circle,
+        Simple,
+        Smart
     }
 }

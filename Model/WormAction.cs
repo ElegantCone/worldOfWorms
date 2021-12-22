@@ -2,13 +2,13 @@
 {
     public class WormAction
     {
-        public Decision _decision;
-        public Direction _direction;
+        public readonly Decision Decision;
+        public readonly Direction Direction;
 
         public WormAction(Decision decision, Direction direction)
         {
-            _decision = decision;
-            _direction = direction;
+            Decision = decision;
+            Direction = direction;
         }
     }
 }

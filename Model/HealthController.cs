@@ -12,7 +12,7 @@ namespace WormsWorld.Model
         public HealthController(int value)
         {
             _health = value;
-            OnDeath += () => gameObject.Destroy();
+            OnDeath += () => GameObject.Destroy();
         }
 
         public int health

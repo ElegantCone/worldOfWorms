@@ -2,7 +2,7 @@
 {
     public abstract class Component : IUpdatable
     {
-        public GameObject gameObject
+        public GameObject GameObject
         {
             get;
             internal set;

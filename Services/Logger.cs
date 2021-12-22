@@ -11,8 +11,8 @@ namespace WormsWorld.Services
 {
     public class Logger : Component
     {
-        private Field _field;
-        private StreamWriter _stream;
+        private readonly Field _field;
+        private readonly StreamWriter _stream;
         public Logger(Field field)
         {
             string outputTxt = "output.txt";
@@ -22,20 +22,20 @@ namespace WormsWorld.Services
 
         public override void Update()
         {
-            String logWorms = "";
-            if (_field.worms.Count > 0)
+            var logWorms = "";
+            if (_field.Worms.Count > 0)
             {
-                logWorms = _field.worms.Select(worm => worm.GetInfo()).Aggregate((acc, info) => $"{acc}, {info}");
+                logWorms = _field.Worms.Select(worm => worm.GetInfo()).Aggregate((acc, info) => $"{acc}, {info}");
             }
-            String logFood = "";
-            if (_field.foods.Count > 0)
+            var logFood = "";
+            if (_field.Foods.Count > 0)
             {
-                logFood = _field.foods.Select(food => food.GetComponent<Transform>().position.ToString())
+                logFood = _field.Foods.Select(food => food.GetComponent<Transform>().Position.ToString())
                     .Aggregate((acc, info) => $"{acc}, {info}");
             }
 
             _stream.WriteLine($"Worms: [{logWorms}], Food: [{logFood}]");
-            Console.WriteLine($"Worms: [{logWorms}], Food: [{logFood}]");
+            //Console.WriteLine($"Worms: [{logWorms}], Food: [{logFood}]");
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Transform : Component
     {
-        public Position position;
+        public Position Position;
         
         public override void Update()
         {

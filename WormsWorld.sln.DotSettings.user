@@ -1,0 +1,15 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=54a58816_002Ddead_002D418f_002Db022_002D4e2303f51b87/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MoveWormTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.WormMovementTest.MoveWormOnFoodTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.WormMovementTest.MoveWormOnEmptyCellTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.WormMovementTest.MoveWormOnAnotherWormTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.WormReproducementTest.ReproduceOnEmptyCell&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.WormReproducementTest.ReproduceOnFood&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.WormReproducementTest.ReproduceOnWorm&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::2B7FCF4A-BBC9-47D9-AE94-6FB14ACB6911::net6.0::WormsWorld.WormsWorld.Tests.NameGeneratorTest.UniqueNamesTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d13fbbaf_002Df456_002D4001_002Dbb4e_002D99f53844bb51/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

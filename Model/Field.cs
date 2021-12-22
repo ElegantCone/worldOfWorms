@@ -1,50 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using WormsWorld.Engine;
-using WormsWorld.Model;
 
 namespace WormsWorld.Model
 {
     public class Field : Component
     {
-        
-        private ObservableCollection<Worm> _worms = new();
-        private ObservableCollection<GameObject> _foods = new();
+        private readonly ObservableCollection<Worm> _worms = new();
+        private readonly ObservableCollection<GameObject> _foods = new();
 
         private readonly IList<Worm> _wormsToRemove = new List<Worm>(); 
-        private readonly IList<GameObject> _foodsToRemove = new List<GameObject>(); 
+        private readonly IList<GameObject> _foodsToRemove = new List<GameObject>();
+        private readonly IList<Worm> _wormsToAdd = new List<Worm>();
 
-        public ObservableCollection<Worm> worms => _worms;
+        public ObservableCollection<Worm> Worms => _worms;
 
-        public ObservableCollection<GameObject> foods => _foods;
+        public ObservableCollection<GameObject> Foods => _foods;
 
-        public Action<Field> onFieldChanged = field => {};
-
-        private StringBuilder wormsInfo;
+        private readonly Action<Field> _onFieldChanged = field => {};
+        
 
         public Field()
         {
             _worms.CollectionChanged += (sender, args) =>
             {
-                onFieldChanged?.Invoke(this);
+                _onFieldChanged?.Invoke(this);
             };
             
             _foods.CollectionChanged += (sender, args) =>
             {
-                onFieldChanged?.Invoke(this);
+                _onFieldChanged?.Invoke(this);
             };
-            
-            wormsInfo = new StringBuilder();
         }
 
         public override void Update()
         {
-            
+
             foreach (var worm in _wormsToRemove)
             {
                 _worms.Remove(worm);
+            }
+
+            foreach (var worm in _wormsToAdd)
+            {
+                _worms.Add(worm);
             }
 
             foreach (var food in _foodsToRemove)
@@ -53,20 +53,22 @@ namespace WormsWorld.Model
             }
             _foodsToRemove.Clear();
             _wormsToRemove.Clear();
+            _wormsToAdd.Clear();
         }
 
-        public void RemoveWorm(Worm worm)
+        public void AddWorm(Worm worm)
+        {
+            worm.GameObject.GetComponent<HealthController>().OnDeath += () => RemoveWorm(worm);
+            _wormsToAdd.Add(worm);
+        }
+
+
+        private void RemoveWorm(Worm worm)
         {
             if (_worms.Contains(worm))
             {
                 _wormsToRemove.Add(worm);
             }
-        }
-        
-
-        public string GetInfo()
-        {
-            return wormsInfo.ToString();
         }
 
         public void RemoveFood(GameObject food)
@@ -77,23 +79,27 @@ namespace WormsWorld.Model
             }
         }
         
-        public bool IsCellEmpty(Position pos, bool isFood = false)
+        public bool IsCellEmpty(Position pos, bool isFood = false, bool isReproduce = false)
         {
-
-            if (!isFood)
-            {
-                foreach (var worm in worms)
+            if (!isFood){
+                foreach (var worm in Worms)
                 {
-                    if (worm.gameObject.GetComponent<Transform>().position == pos)
-                        return false;
+                    if (worm.GameObject.GetComponent<Transform>().Position == pos)
+                         return false;
                 }
+                
+            }
+            
+            if (isReproduce)
+            {
+                isFood = true;
             }
 
             if (isFood)
             {
-                foreach (var food in foods)
+                foreach (var food in Foods)
                 {
-                    if (food.GetComponent<Transform>().position == pos) 
+                    if (food.GetComponent<Transform>().Position == pos) 
                         return false;
                 }
             }

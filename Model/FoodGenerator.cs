@@ -8,7 +8,7 @@ namespace WormsWorld.Model
     public class FoodGenerator : Component
     {
         private readonly Random _r = new Random();
-        private Field _field;
+        private readonly Field _field;
         private const int Life = 10;
 
         public FoodGenerator(Field field)
@@ -36,15 +36,26 @@ namespace WormsWorld.Model
         {
             var food = new GameObject();
             HealthController hc;
-            food.GetComponent<Transform>().position = position;
+            food.GetComponent<Transform>().Position = position;
             food.AddComponent(hc = new HealthController(Life));
             return hc;
         }
 
-        public static void AddFoodToField(Field _field, HealthController hc)
+        public bool GenerateFoodOnPosition(Position position)
         {
-            hc.OnDeath += () => _field.RemoveFood(hc.gameObject);
-            _field.foods.Add(hc.gameObject);
+            if (!_field.IsCellEmpty(position, true))
+            {
+                return false;
+            }
+            var hc = InstantiateFood(position);
+            AddFoodToField(_field, hc);
+            return true;
+        }
+
+        private static void AddFoodToField(Field field, HealthController hc)
+        {
+            hc.OnDeath += () => field.RemoveFood(hc.GameObject);
+            field.Foods.Add(hc.GameObject);
         }
     }
 }

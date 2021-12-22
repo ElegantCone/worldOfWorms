@@ -7,67 +7,75 @@ using WormsWorld.Model;
 
 namespace WormsWorld.Services
 {
-    public class WormBehaviourService
+    public class WormBehaviourService : Component
     {
-        public Field Field;
-        public NameGenerator NameGenerator;
-        private Dictionary<Direction, Action<Position>> ChangePosition;
-        
+        private readonly Field _field;
+        public readonly NameGenerator NameGenerator;
+        private readonly Dictionary<Direction, Action<Position>> _changePosition;
+
         public WormBehaviourService(NameGenerator nameGenerator, Field field)
         {
             NameGenerator = nameGenerator;
-            Field = field;
-            ChangePosition = new()
+            _field = field;
+            _changePosition = new()
             {
-                {Direction.UP, (position) => position.y++},
-                {Direction.DOWN, (position) => position.y--},
-                {Direction.LEFT, (position) => position.x--},
-                {Direction.RIGHT, (position) => position.x++},
-                {Direction.NOTHING, (position) => {}}
+                {Direction.Up, (position) => position.y++},
+                {Direction.Down, (position) => position.y--},
+                {Direction.Left, (position) => position.x--},
+                {Direction.Right, (position) => position.x++},
+                {Direction.Nothing, (position) => {}}
             };
         }
 
-        public void PerformWormAction(Worm worm)
+        private void PerformWormAction(Worm worm)
         {
-            var gameObject = worm.gameObject;
-            var _position = gameObject.GetComponent<Transform>().position;
-            var foods = new List<GameObject>(Field.foods.OrderBy(f => 
-                Position.Distance(f.GetComponent<Transform>().position, _position)));
+            var go = worm.GameObject;
+            var position = go.GetComponent<Transform>().Position;
+            var foods = new List<GameObject>(_field.Foods.OrderBy(f => 
+                Position.Distance(f.GetComponent<Transform>().Position, position)));
             WormAction wAction;
             if (foods.Count > 0)
             {
-                wAction = worm.ai.GetNextAction(_position, foods[0].GetComponent<Transform>());
+                worm.TargetFood = foods[0];
+                wAction = worm.Ai.GetNextAction(position, foods[0].GetComponent<Transform>());
             }
             else
             {
-                wAction = worm.ai.GetNextAction(_position);
+                wAction = worm.Ai.GetNextAction(position);
             }
-            if (wAction._decision == Decision.DO_NOTHING)
+            if (wAction.Decision == Decision.DoNothing)
             {
                 return;   
             }
-            Position pos = new(_position.x, _position.y);
-            ChangePosition[wAction._direction](pos);
-            if (wAction._decision == Decision.MOVE)
+            Position pos = new(position.x, position.y);
+            _changePosition[wAction.Direction](pos);
+            if (wAction.Decision == Decision.Move)
             {
-                if (Field.IsCellEmpty(pos))
-                {
-                    gameObject.GetComponent<Transform>().position = pos;
-                }
+                Move(pos, worm);
             }
-            if (wAction._decision == Decision.REPRODUCE)
+            if (wAction.Decision == Decision.Reproduce)
             {
-                if (Field.IsCellEmpty(pos))
-                {
-                    Reproduce(worm, pos);
-                    gameObject.GetComponent<HealthController>().health -= 10;
-                }
+                Reproduce(worm, pos);
             }
+        }
 
-            GameObject foodToEat = null;
-            foreach (var food in Field.foods)
+        public bool Move(Position position, Worm worm)
+        {
+            if (_field.IsCellEmpty(position))
             {
-                if (food.GetComponent<Transform>().position == _position)
+                worm.GameObject.GetComponent<Transform>().Position = position;
+                EatFood(position, worm);
+                return true;
+            }
+            return false;
+        }
+
+        private GameObject EatFood(Position position, Worm worm)
+        {
+            GameObject foodToEat = null;
+            foreach (var food in _field.Foods)
+            {
+                if (food.GetComponent<Transform>().Position == position)
                 {
                     foodToEat = food;
                     break;
@@ -77,18 +85,39 @@ namespace WormsWorld.Services
             if (foodToEat != null)
             {
                 foodToEat.GetComponent<HealthController>().health = 0;
-                gameObject.GetComponent<HealthController>().health += 10;
+                worm.GameObject.GetComponent<HealthController>().health += 10;
             }
+
+            return foodToEat;
         }
-        
-        private void Reproduce(Worm worm, Position pos)
+
+        public bool Reproduce(Worm worm, Position pos)
         {
-            var wormGo = new GameObject();
-            var child = new Worm();
-            wormGo.AddComponent(child);
-            worm.ChildCount++;
-            child.Initialize(pos.x, pos.y, AIType.SIMPLE, this, NameGenerator.GenerateName(worm.Name, worm.ChildCount));
-            child.gameObject.GetComponent<HealthController>().health = Worm.ChildHealth;
+            if (_field.IsCellEmpty(pos, false, true) && worm.GameObject.GetComponent<HealthController>().health > 10)
+            {
+                var wormGo = new GameObject();
+                var child = new Worm();
+                wormGo.AddComponent(child);
+                worm.ChildCount++;
+                child.Initialize(pos.x, pos.y, AIType.Simple, NameGenerator.GenerateName(worm.Name, worm.ChildCount));
+                child.GameObject.GetComponent<HealthController>().health = Worm.ChildHealth;
+                _field.AddWorm(child); 
+                EatFood(pos, worm);
+                worm.GameObject.GetComponent<HealthController>().health -= 10;
+                return true;
+            }
+            EatFood(pos, worm);
+            return false;
+        }
+
+        public override void Update()
+        {
+            foreach (var worm in _field.Worms)
+            {
+                GameObject food = EatFood(worm.GameObject.GetComponent<Transform>().Position, worm);
+                _field.Foods.Remove(food);
+                PerformWormAction(worm);
+            }
         }
     }
 }

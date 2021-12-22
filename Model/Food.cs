@@ -6,8 +6,8 @@ namespace WormsWorld.Model
 {
     public class Food
     {
-        public Position _position;
-        public Action onSpoiled;
+        private Position _position;
+        private Action _onSpoiled;
         private int _life = 10;
 
         public int life
@@ -18,7 +18,7 @@ namespace WormsWorld.Model
                 _life = value;
                 if (life == 0)
                 {
-                    onSpoiled?.Invoke();
+                    _onSpoiled?.Invoke();
                 }
             }
         }

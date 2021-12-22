@@ -1,7 +1,27 @@
-﻿namespace WormsWorld.Engine
+﻿using System;
+
+namespace WormsWorld.Engine
 {
     public class Position
     {
+        private bool Equals(Position other)
+        {
+            return x == other.x && y == other.y;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Position) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(x, y);
+        }
+
         public int x { get; set; }
         public int y { get; set; }
 

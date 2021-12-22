@@ -10,16 +10,16 @@ namespace WormsWorld.AI
         private static readonly Dictionary<Direction, Func<Position, Position, int, bool>> ChangeDirectionConditions =
             new()
             {
-                { Direction.UP, (position, center, radius) => position.y >= center.y + radius },
-                { Direction.DOWN, (position, center, radius) => position.y <= center.y - radius },
-                { Direction.LEFT, (position, center, radius) => position.x <= center.x - radius },
-                { Direction.RIGHT, (position, center, radius) => position.x >= center.x + radius }
+                { Direction.Up, (position, center, radius) => position.y >= center.y + radius },
+                { Direction.Down, (position, center, radius) => position.y <= center.y - radius },
+                { Direction.Left, (position, center, radius) => position.x <= center.x - radius },
+                { Direction.Right, (position, center, radius) => position.x >= center.x + radius }
             };
 
         private Position _center;
         private int _radius;
 
-        private WormAction previousAction = new WormAction(Decision.MOVE, Direction.UP);
+        private WormAction previousAction = new WormAction(Decision.Move, Direction.Up);
         
         public WormAIRound(int x, int y, int r)
         {
@@ -29,27 +29,27 @@ namespace WormsWorld.AI
         
         public WormAction GetNextAction(Position position, Transform food = null)
         {
-            var dir = previousAction._direction;
+            var dir = previousAction.Direction;
 
             if (ChangeDirectionConditions[dir](position, _center, _radius))
             {
-                return previousAction = new WormAction(Decision.MOVE, GetNextDirection(dir));
+                return previousAction = new WormAction(Decision.Move, GetNextDirection(dir));
             }
             
-            return previousAction = new WormAction(Decision.MOVE, dir);
+            return previousAction = new WormAction(Decision.Move, dir);
         }
 
         private Direction GetNextDirection(Direction dir)
         {
             switch (dir)
             {
-                case Direction.UP: return Direction.RIGHT;
-                case Direction.RIGHT: return Direction.DOWN;
-                case Direction.DOWN: return Direction.LEFT;
-                case Direction.LEFT: return Direction.UP;
+                case Direction.Up: return Direction.Right;
+                case Direction.Right: return Direction.Down;
+                case Direction.Down: return Direction.Left;
+                case Direction.Left: return Direction.Up;
             }
 
-            return Direction.UP;
+            return Direction.Up;
         }
         
     }
